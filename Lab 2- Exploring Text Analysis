@@ -1,0 +1,138 @@
+# Import the pandas library to facilitate data manipulation and analysis
+import pandas as pd
+
+# Import the CountVectorizer class from Scikit-learn for text analysis
+from sklearn.feature_extraction.text import CountVectorizer
+
+# Create an instance of CountVectorizer to convert text data into token count matrices
+count_vect = CountVectorizer()
+
+from IPython.core.display import display_html
+# Define two distinct text documents for analysis
+Document1 = """Data types are fundamental building blocks in computer programming and data representation.They define the kind of data that can be stored in a variable or a memory location. Each data type specifies the size, format, and range of values that the variable can hold. Common data types include integers, floating-point numbers, characters, booleans, and strings. Integer data types store whole numbers, while floating-point types handle numbers with fractional parts. Characters represent individual characters or symbols, and booleans can only hold two values: true or false. Strings are sequences of characters and are used to represent text. Properly choosing and understanding data types is essential for efficient memory usage and accurate data manipulation in software development."""
+Document2 = """Data types are an essential concept in computer programming and data management. They define the nature of data and the operations that can be performed on it. In programming languages, data types categorize variables, literals, and expressions, guiding the compiler or interpreter on how to handle and store the data in memory. Common data types include integers, floating-point numbers, characters, strings, booleans, and more. Each data type possesses specific characteristics, such as size, range, and precision, which impact memory allocation and data manipulation. The proper selection and understanding of data types ensure data integrity, optimize memory usage, and enable efficient computation, making them crucial elements in building robust and reliable software systems."""
+
+# Create a corpus by collecting the defined documents
+corpus=[Document1,Document2]
+
+# Convert the text data into a token count matrix
+matrix1 = count_vect.fit_transform(corpus)
+print(matrix1)
+
+# Convert the matrix to an array for easier manipulation
+Mat01=matrix1.toarray()
+
+# Display the shape of the new array to understand its dimensions
+Mat01.shape
+
+# Create a vector that represents token count for the first and second documents
+vecA=Mat01[0,:]
+vecB=Mat01[1,:]
+print(vecA)
+print(vecB)
+
+import numpy as np
+from numpy import linalg as LA
+
+# Calculate the dot product of vectors
+vdot=np.dot(vecA,vecB)
+
+# Calculate the Euclidean norm of each vector
+vnorm1=LA.norm(vecA,2)
+vnorm2=LA.norm(vecB,2)
+
+# Compute the cosine similarity
+vcos=vdot/(vnorm1*vnorm2)
+print('cosine angle:', vcos)
+
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+# Create a TfidfVectorizer object
+vectorizer=TfidfVectorizer()
+
+# Apply the a method to convert the 'corpus' using TF-IDF vectorization.
+trsfm=vectorizer.fit_transform(corpus)
+
+# Generate a visualization of the new token count matrix similar to step one
+pd.DataFrame(trsfm.toarray(),columns=count_vect.get_feature_names_out(),index=['Document 1', 'Document 2'])
+
+# Transform token count matrix into array and then extract vector for each document
+Mat02 = trsfm.toarray()
+vec01=Mat02[0,:]
+vec02=Mat02[1,:]
+# Calculate the dot product similarity between two vector
+vdot=np.dot(vec01, vec02)
+
+cosine_sim = cosine_similarity(trsfm[0,:],trsfm)
+print('cosine similarity is:', cosine_sim)
+
+import numpy as np
+from numpy import linalg as la
+
+# Normalize the vectors
+norm1 = np.linalg.norm(vecA,2)
+norm2 = np.linalg.norm(vecB,2)
+NormVec1 = vecA/norm1
+NormVec2 = vecB/norm2
+
+# Calculate the absolute difference between the normalized vectors
+ABS_DIFF = np.abs(vecA - vecB)
+print(ABS_DIFF)
+
+# Calculate the norm of this new difference vector
+AH = np.linalg.norm(NormVec1 - NormVec2)
+AG = np.linalg.norm(ABS_DIFF)
+
+# Print the absolute difference and euclidean difference between the two vectors
+print(AH,AG)
+
+
+import matplotlib.pyplot as plt
+
+# Calculate the absolute difference in word count between the two vectors
+absolute_difference = np.abs(vecA - vecB)
+print("absolute difference vector",absolute_difference)
+print(np.sum(absolute_difference))
+
+# Get the feature names (words) in alphabetical order
+vectorizer.get_feature_names_out(Document1)
+vectorizer.get_feature_names_out(Document2)
+
+# Create a figure with two subplots
+plt.figure(figsize=(8,6))
+plt.plot(vecA,vecB, label='line1')
+plt.scatter(vecA, vecB, label='points', color='red')
+plt.legend()
+plt.show()
+
+# Create the first subplot for first vector and plot
+plt.subplot(2, 1, 1)
+plt.plot(vecA)
+plt.title('First Vector')
+plt.xlabel('Index')
+plt.ylabel('Value')
+
+# Create a bar plot for absolute word count differences in vec01
+plt.subplot(2, 2, 2)
+plt.bar(range(len(absolute_difference)), absolute_difference)
+plt.title('Absolute Difference in Word Count')
+plt.ylabel('Absolute Difference')
+plt.xlabel('Index')
+
+# Create the second subplot second vector
+plt.subplot(2, 2, 3)
+plt.plot(vecB)
+plt.title('Second Vector')
+plt.xlabel('Index')
+plt.ylabel('Value')
+
+# Create a bar plot for absolute word count differences in vec02
+plt.subplot(2, 2, 4)
+plt.bar(range(len(absolute_difference)), absolute_difference)
+
+plt.title('Absolute Difference in Word Count')
+plt.xlabel('Index')
+plt.ylabel('Absolute Difference')
+
+plt.tight_layout()
