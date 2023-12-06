@@ -1,0 +1,43 @@
+from google.colab import drive
+drive.mount ('/content/drive')
+
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+img_path=("/content/gilmore girls download.jpeg")
+img=mpimg.imread(img_path)
+plt.imshow(img)
+plt.axis("off")
+plt.show()
+
+newimg = img
+newimg_shape=newimg.shape
+
+newimg[0,0,0]
+newimg[:,:,0]
+
+newimg_red= newimg[:,:,0]
+newimg_green= newimg[:,:,1]
+newimg_blue= newimg[:,:,2]
+
+import numpy as np
+img1= np.zeros(newimg_shape, dtype = np.uint8)
+plt.imshow(img1)
+plt.axis("off")
+plt.show()
+
+img1[:,:,0]= newimg_red
+plt.imshow(img1)
+plt.axis("off")
+plt.show()
+
+img1[:,:,2]= newimg_blue
+plt.imshow(img1)
+plt.axis("off")
+plt.show()
+
+
+
+new2= 0.299*newimg_red + 0.587*newimg_green + 0.114*newimg_blue
+plt.imshow(new2, cmap="gray",vmin=0,vmax=255)
+plt.axis("off")
+plt.show()
